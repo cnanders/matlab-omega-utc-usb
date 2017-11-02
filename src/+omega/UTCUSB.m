@@ -108,12 +108,12 @@ classdef UTCUSB < handle
             fprintf(this.s, 'C');
             c = fscanf(this.s);
             c = this.removeTerminator(c);
-            c = this.removeFirstCharacter(c);
+            c = this.removeGreaterThanCharacter(c);
             d = str2double(c);
             %}
             
             % Convert Farenheight to C for better resolution
-            d = this.getTemperatureF()
+            d = this.getTemperatureF();
             d = this.farenheightToCelcius(d);
             
         end
@@ -125,7 +125,7 @@ classdef UTCUSB < handle
             fprintf(this.s, 'F');
             c = fscanf(this.s);
             c = this.removeTerminator(c);
-            c = this.removeFirstCharacter(c);
+            c = this.removeGreaterThanCharacter(c);
             d = str2double(c);
         end
                     
@@ -161,8 +161,10 @@ classdef UTCUSB < handle
         % The response from the "C" and "F" commands have a ">" character
         % in front.  Omega tech support was contacted and could not explain
         % why this character is present
-        function c = removeFirstCharacter(this, c)
-           c = c(2 : end); 
+        function c = removeGreaterThanCharacter(this, c)
+            if strcmp(c(1), '>')
+                c = c(2 : end); 
+            end
         end
         
         function clearBytesAvailable(this)
