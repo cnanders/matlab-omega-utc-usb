@@ -11,7 +11,7 @@ inst.init();
 inst.connect();
 st = inst.getModelAndFirmware()
 c = inst.getThermocoupleType()
-dC = inst.getTemperatureC()
+% dC = inst.getTemperatureC()
 dF = inst.getTemperatureF()
 dCFromF = inst.farenheightToCelcius(dF)
 inst.disconnect();

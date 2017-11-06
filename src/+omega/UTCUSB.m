@@ -79,7 +79,7 @@ classdef UTCUSB < handle
         
         function st = getModelAndFirmware(this)
 
-            fprintf(this.s, 'ENQ'); 
+            this.send('ENQ'); 
 
             % Need to scan twice because return is in format
             % USBUSB2 CRLF
@@ -96,7 +96,7 @@ classdef UTCUSB < handle
         end
         
         function c = getThermocoupleType(this)
-            fprintf(this.s, 'TCTYPE');
+            this.send('TCTYPE');
             c = fscanf(this.s);
             c = this.removeTerminator(c);
         end
@@ -104,8 +104,9 @@ classdef UTCUSB < handle
         % Returns the temperature in Celcius with a resolution of 1 deg C
         function d = getTemperatureC(this)
             
+            
             %{
-            fprintf(this.s, 'C');
+            this.send('C');
             c = fscanf(this.s);
             c = this.removeTerminator(c);
             c = this.removeGreaterThanCharacter(c);
@@ -122,7 +123,7 @@ classdef UTCUSB < handle
         % F
         function d = getTemperatureF(this)
 
-            fprintf(this.s, 'F');
+            this.send('F')
             c = fscanf(this.s);
             c = this.removeTerminator(c);
             c = this.removeGreaterThanCharacter(c);
@@ -145,7 +146,12 @@ classdef UTCUSB < handle
     
     methods (Access = private)
        
-        
+        % Writes the provided value to the serial device
+        % @param {char 1xm} c - value to write to serial device
+        function send(this, c)
+            this.clearBytesAvailable()
+            fprintf(this.s, c);
+        end
         
         
         % Returns a {char} 1 x m-2 that has the last two characters removed
@@ -185,7 +191,7 @@ classdef UTCUSB < handle
         end
         
         function msg(this, cMsg)
-           fprintf('ometa.UTCUSB %s\n', cMsg); 
+           fprintf('omega.UTCUSB %s\n', cMsg); 
         end
         
         function l = hasProp(this, c)
